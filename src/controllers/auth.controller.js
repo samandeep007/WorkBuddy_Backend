@@ -29,7 +29,7 @@ const register = asyncHandler(async (req, res) => {
     if ([fullName, email, username, password, phone].some(field => !field || field === "")) {
         throw new ApiError(400, "All fields are required");
     }
-    
+
     // Check if user already exists
     const user = await UserModel.findOne({ $or: [{ email }, { username }] });
 
@@ -98,7 +98,7 @@ const login = asyncHandler(async (req, res) => {
     console.log(`${accessToken} hai aur ${refreshToken} hai`);
     // Fetch logged in user without sensitive information
     const loggedInUser = await UserModel.findById(user._id).select("-password -refreshToken");
-
+    console.log(loggedInUser, refreshToken, accessToken)
     // Send response with tokens in cookies
     return res
         .status(200)
@@ -111,11 +111,11 @@ const login = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
     const user = await UserModel.findById(req.user._id).select('-password -refreshToken');
     if (!user) {
-      res.status(404).json({ message: 'User not found' });
+        res.status(404).json({ message: 'User not found' });
     } else {
-      res.status(200).json({ user });
+        res.status(200).json({ user });
     }
-  });
+});
 
 // Handler for user logout
 const logout = asyncHandler(async (req, res) => {
@@ -178,7 +178,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
 
     // Filter out empty fields
     const newUserDetails = Object.entries(userDetails).filter(([_, value]) => value?.trim() !== "");
-    
+
     try {
         const user = await UserModel.findById(req.user.id);
 
@@ -259,7 +259,7 @@ const getUserById = asyncHandler(async (req, res) => {
     if (!id) {
         throw new ApiError(400, "User ID is required");
     }
-    const user = await UserModel.findById(id).select('-password -refreshToken'); 
+    const user = await UserModel.findById(id).select('-password -refreshToken');
 
     if (!user) {
         throw new ApiError(404, "User not found");
@@ -269,4 +269,4 @@ const getUserById = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "User fetched successfully", user));
 });
 
-export {register, login, logout, changePassword, updateUserDetails, refreshAccessToken, getCurrentUser, getUserById}
+export { register, login, logout, changePassword, updateUserDetails, refreshAccessToken, getCurrentUser, getUserById }
