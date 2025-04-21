@@ -4,6 +4,7 @@ import multer from 'multer';
 const storage = multer.diskStorage({
     // Set the destination for uploaded files
     destination: (req, file, cb) => {
+        console.log("photo to aayi")
         cb(null, './public/temp');
     },
 
