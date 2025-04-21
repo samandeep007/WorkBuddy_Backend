@@ -45,4 +45,7 @@ app.use(limiter);
 app.use("/api/auth", userRouter);
 app.use("/api/properties", propertyRouter);
 
+app.set("trust proxy", 1);
+
+
 export {app};

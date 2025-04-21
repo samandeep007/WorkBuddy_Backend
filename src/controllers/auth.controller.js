@@ -92,13 +92,14 @@ const login = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true
-    }
+        secure: true,                // required for SameSite: 'none'
+        sameSite: "none"             // cross-site cookies must have this
+      };
+      
 
-    console.log(`${accessToken} hai aur ${refreshToken} hai`);
     // Fetch logged in user without sensitive information
     const loggedInUser = await UserModel.findById(user._id).select("-password -refreshToken");
-    console.log(loggedInUser, refreshToken, accessToken)
+
     // Send response with tokens in cookies
     return res
         .status(200)
