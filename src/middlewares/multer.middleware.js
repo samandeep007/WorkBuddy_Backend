@@ -1,19 +1,25 @@
 import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+
+// Set the path
+const uploadDir = path.join(process.cwd(), 'public/temp');
+
+// Ensure the directory exists
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Configure multer disk storage
 const storage = multer.diskStorage({
-    // Set the destination for uploaded files
     destination: (req, file, cb) => {
-        console.log("photo to aayi")
-        cb(null, './public/temp');
+        cb(null, uploadDir);
     },
-
-    // Use the original filename for the uploaded file
     filename: (req, file, cb) => {
         cb(null, file.originalname);
     }
 });
 
-// Create a multer instance with the configured storage
-const upload = multer({storage: storage});
+const upload = multer({ storage });
+
 export default upload;
