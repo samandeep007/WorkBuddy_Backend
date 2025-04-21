@@ -73,6 +73,8 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required!");
     }
 
+    console.log(identifier);
+    console.log(password);
     // Find user by email or username
     const user = await UserModel.findOne({ $or: [{ email: identifier }, { username: identifier }] });
 
@@ -87,6 +89,8 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Incorrect Password. Try again!");
     }
 
+    console.log("SAB THEEK HAI")
+
     // Generate tokens
     const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id);
 
@@ -95,6 +99,7 @@ const login = asyncHandler(async (req, res) => {
         secure: true
     }
 
+    console.log("Ho gya sab");
     // Fetch logged in user without sensitive information
     const loggedInUser = await UserModel.findById(user._id).select("-password -refreshToken");
 
